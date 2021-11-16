@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.control.TreeItem?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<TreeView maxHeight="-Infinity" minWidth="100.0" prefHeight="600.0" prefWidth="256.0" showRoot="false" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.controllers.WorkViewController" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+    <TreeItem fx:id="root"/>
+</TreeView>

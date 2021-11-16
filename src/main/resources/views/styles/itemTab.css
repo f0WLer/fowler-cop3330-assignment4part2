@@ -1,0 +1,22 @@
+.text-area *.text {
+    -fx-text-alignment: center;
+}
+
+.text-area {
+    -fx-background-color: rgb(205, 205, 205);
+}
+
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.CheckMenuItem?>
+<MenuBar maxHeight="-Infinity" minHeight="-Infinity" prefHeight="28.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.controllers.MenuBarController">
+   <Menu mnemonicParsing="false" text="File">
+      <MenuItem mnemonicParsing="false" onAction="#file_new" text="New" />
+      <MenuItem mnemonicParsing="false" onAction="#file_open" text="Open" />
+      <SeparatorMenuItem/>
+      <MenuItem mnemonicParsing="false" onAction="#file_saveAs" text="Save as..."/>
+   </Menu>
+   <Menu mnemonicParsing="false" text="List">
+      <MenuItem mnemonicParsing="false" text="New List" onAction="#list_new" />
+      <MenuItem fx:id="saveList" mnemonicParsing="false" text="Save List" onAction="#list_save" />
+      <MenuItem fx:id="deleteList" mnemonicParsing="false" text="Delete List" onAction="#list_delete" />
+      <SeparatorMenuItem/>
+      <MenuItem fx:id="changeTitle" mnemonicParsing="false" text="Change Title" onAction="#list_changeTitle"/>
+      <SeparatorMenuItem/>
+      <MenuItem fx:id="newItem" mnemonicParsing="false" text="New Item" onAction="#list_newItem" />
+      <MenuItem fx:id="clearItems" mnemonicParsing="false" text="Clear Items" onAction="#list_clearItems" />
+      <SeparatorMenuItem/>
+      <CheckMenuItem fx:id="completedCheck" mnemonicParsing="false" text="Show Completed Items" onAction="#list_showCompleted"/>
+      <CheckMenuItem fx:id="incompleteCheck" mnemonicParsing="false" text="Show Incomplete Items" onAction="#list_showIncomplete"/>
+   </Menu>
+   <Menu mnemonicParsing="false" text="Help">
+      <MenuItem mnemonicParsing="false" text="Usage" onAction="#help_usage" />
+   </Menu>
+</MenuBar>

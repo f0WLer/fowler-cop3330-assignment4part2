@@ -1,0 +1,7 @@
+.date-picker .text-field {
+    -fx-control-inner-background: transparent;
+    -fx-text-fill: black;
+    -fx-alignment: center;
+    -fx-font-size: 10pt;
+}
+

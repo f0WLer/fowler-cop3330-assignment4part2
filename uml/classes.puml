@@ -1,0 +1,80 @@
+@startuml
+
+App <-- List
+App <-- FileHandler
+App <-- Util
+class App {
+    -{static} todoLists: ArrayList<List>
+
+    +{static} getLists(): ArrayList<List>
+    +{static} removeList(index: int): void
+    +{static} addList(): List
+
+    +{static} saveList(index: int, filePath: String): void
+    +{static} saveAllLists(filePath: String): void
+    +{static} loadList(filePath: String): void
+
+    +{static} start(stage: Stage): void
+}
+
+List *-- Item
+class List {
+    - title: String
+    - items: ArrayList<Item>
+    --Get/Set--
+    + title(): String
+    + title(String): void
+    --
+    + addItem(Item): void
+    + removeItem(index: int): void
+    + getItem(index: int): Item
+    + getItems(): ArrayList<Item>
+
+    + getCompletedItems(): ArrayList<Item>
+    + getIncompleteItems(): ArrayList<Item>
+
+    + getSaveData(): String
+}
+
+Item *-- DueDate
+class Item {
+    - description: String
+    - due: DueDate
+    - completed: Boolean
+    --Get/Set--
+    + description(): String
+    + description(String): void
+    + due(): DueDate
+    + completed(): Boolean
+    + completed(Boolean): void
+    --
+    + getSaveData(): String
+}
+
+class DueDate {
+    - year: int
+    - month: int
+    - day: int
+    --Get/Set--
+    + year(): int
+    + year(int): void
+    + month(): int
+    + month(int): void
+    + day(): int
+    + day(int): void
+}
+
+FileHandler <-- List
+class FileHandler {
+    --Write--
+    +{static} writeList(List, filePath: String): void
+    +{static} writeLists(ArrayList<List>, filePath: String): void
+    --Read--
+    +{static} readList(filePath: String): List
+}
+
+class Util {
+    +{static} loadView(fxmlName: String): Scene
+}
+
+@enduml

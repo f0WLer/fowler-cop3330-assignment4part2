@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.scene.layout.VBox?>
+<Tab fx:id="root" text="Todo List" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.controllers.TabController">
+   <AnchorPane>
+      <ScrollPane layoutX="14.0" layoutY="14.0" style="-fx-background: rgb(225, 225, 225);" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="12.0">
+         <VBox fx:id="body" minHeight="543.0" minWidth="696.0" prefWidth="696.0" maxWidth="696.0" stylesheets="@styles/itemTab.css">
+            <!-- Item Cards go Here -->
+         </VBox>
+      </ScrollPane>
+   </AnchorPane>
+</Tab>

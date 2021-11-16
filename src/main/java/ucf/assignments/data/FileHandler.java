@@ -1,13 +1,11 @@
 package ucf.assignments.data;
 
+import javafx.stage.FileChooser;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import ucf.assignments.App;
 import ucf.assignments.todo.List;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class FileHandler {
@@ -15,6 +13,13 @@ public class FileHandler {
 				BufferedWriter w = new BufferedWriter(new FileWriter(filePath));
 				w.write(list.getSaveData());
 				w.close();
+		}
+
+		public static FileChooser getFileChooser() {
+				FileChooser fc = new FileChooser();
+				fc.setTitle("Open file...");
+				fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Todo List Files", "*.todo"));
+				return fc;
 		}
 
 		public static void writeLists(ArrayList<List> lists, String filePath) throws IOException {

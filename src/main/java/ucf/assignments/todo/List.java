@@ -20,7 +20,7 @@ public class List {
 				this.title(json.getString("title"));
 				JSONArray items = json.getJSONArray("items");
 				for (int i = 0; i < items.length(); i++)
-						this.addItem(new Item(items.getJSONObject(i)));
+						this.add(new Item(items.getJSONObject(i)));
 		}
 
 		public List(String title, ArrayList<Item> items) {
@@ -38,11 +38,11 @@ public class List {
 		}
 
 		// Item Manipulation
-		public void addItem(Item newItem) {
+		public void add(Item newItem) {
 				this.items.add(newItem);
 		}
 
-		public Item getItem(int itemIndex) {
+		public Item get(int itemIndex) {
 				return this.items.get(itemIndex);
 		}
 
@@ -54,6 +54,7 @@ public class List {
 				this.items = items;
 		}
 
+		public void clear() { this.items.clear(); }
 
 		// Item Filtering
 		public ArrayList<Item> getCompletedItems() {
@@ -92,7 +93,7 @@ public class List {
 				if (this.items.size() > 0) {
 						l.add("\"items\":[");
 						for (int i = 0; i < this.items.size(); i++) {
-								Item item = this.getItem(i);
+								Item item = this.get(i);
 								String[] iData = item.toString().split("\n");
 								for (int j = 0; j < iData.length; j++) {
 										String ss = iData[j];
@@ -114,4 +115,8 @@ public class List {
 
 				return sb.toString();
 		}
+
+		public int size() { return this.items.size(); }
+
+public void remove(int itemIndex) { this.items.remove(itemIndex); }
 }

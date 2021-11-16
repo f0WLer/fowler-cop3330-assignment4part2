@@ -4,26 +4,29 @@
  */
 package ucf.assignments;
 
+import ucf.assignments.data.AppMemory;
 import ucf.assignments.gui.GUI;
 import ucf.assignments.todo.List;
 
 import java.util.ArrayList;
 
 public class App {
-    private static ArrayList<List> lists = new ArrayList<>();
+    // Memory handler class.
+    public static AppMemory mem;
+    // GUI handler class.
     public static GUI gui;
 
     public static void main(String[] args) {
+        // Initialize App memory class.
+        App.mem = new AppMemory();
         // Launch GUI.
         App.gui = new GUI();
         App.gui.launch();
     }
 
-    // List Getter.
-    public static ArrayList<List> lists() {
-        return lists;
-    }
 
+
+    /* ---------- Auxiliary ---------- */
     // Application Exception Handler.
     public static void spitError(Thread t, Throwable e) {
         System.out.println("ERROR: " + e.getLocalizedMessage());

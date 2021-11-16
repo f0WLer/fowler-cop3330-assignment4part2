@@ -19,7 +19,7 @@ class ListTest {
     void addItem() {
         /*
         - Create a new empty list.
-        - use List.addItem x times.
+        - use List.add x times.
         - Assert that List.items is x length.
          */
     }

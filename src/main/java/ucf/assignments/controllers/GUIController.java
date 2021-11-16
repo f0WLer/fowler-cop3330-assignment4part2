@@ -13,15 +13,16 @@ import ucf.assignments.App;
 import ucf.assignments.gui.ListEditor;
 import ucf.assignments.gui.WorkspaceView;
 
-import static ucf.assignments.gui.Util.*;
-
 import java.io.IOException;
+
+import static ucf.assignments.gui.Auxiliary.getFXML;
+import static ucf.assignments.gui.Auxiliary.setAnchors;
 
 public class GUIController {
 		@FXML
 		private AnchorPane appBody;
 
-
+		/* ---------- Initializer ---------- */
 		public void initialize() throws IOException {
 				TreeView<String> workspaceView;
 				TabPane listEditor;

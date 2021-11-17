@@ -74,7 +74,7 @@ public void renameTab(int listIndex, String newTitle) {
     tab.getRoot().setText(newTitle);
 }
 
-public void goToTab(int listIndex) throws IOException {
+public void openTab(int listIndex) throws IOException {
     TabController tab = this.getTab(listIndex);
     if ( tab == null ) {
         this.newTab(App.mem.get(listIndex), listIndex, true);
@@ -84,7 +84,7 @@ public void goToTab(int listIndex) throws IOException {
     }
 }
 
-public void reset() {
+public void clear() {
     this.tabs.clear();
     this.pane.getTabs().clear();
 }

@@ -131,7 +131,7 @@ public int getBranchIndex(int listIndex) {
     return -1;
 }
 
-public void reset() {
+public void clear() {
     this.treeMap.clear();
     this.root.getChildren().clear();
 }
@@ -146,7 +146,7 @@ private void onMouseClicked(MouseEvent mouseEvent) throws IOException {
             return;
         for (int i = 0; i < root.getChildren().size(); i++) {
             if ( root.getChildren().get(i).equals(branch) )
-                App.gui.goToList(i);
+                App.gui.openBranchInTab(i);
         }
     }
 }

@@ -3,13 +3,9 @@ package ucf.assignments.gui;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import ucf.assignments.App;
 import ucf.assignments.controllers.MenuBarController;
 import ucf.assignments.controllers.NewListPromptController;
@@ -19,7 +15,6 @@ import ucf.assignments.todo.Item;
 import ucf.assignments.todo.List;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import static ucf.assignments.gui.Auxiliary.getFXML;
@@ -30,17 +25,18 @@ public MenuBarController menuBar;
 public WorkspaceView workspaceView;
 public ListEditor listEditor;
 // JavaFX Stage.
-private Stage stage;
+public Stage stage;
 
 /* ---------- Constructor ---------- */
-public GUI() {}
+public GUI() { }
 
 /* ---------- JavaFX ---------- */
 // Launches JavaFX Application.
-public void launch() {Application.launch(GUI.class);}
+public void launch() { Application.launch(GUI.class); }
 
 @Override
 public void start(Stage stage) throws Exception {
+    // Acknowledge App start in console.
     System.out.println("Application Started");
     Thread.setDefaultUncaughtExceptionHandler(App::spitError);
 
@@ -78,7 +74,7 @@ public void clearList() {
     // Get the current tab/list.
     TabController tab = this.listEditor.getCurrentTab();
     // Abort if no tabs are displayed.
-    if ( tab == null ) {return;}
+    if ( tab == null ) { return; }
     int listIndex = tab.listIndex;
 
     // Clear the tab.
@@ -96,7 +92,8 @@ public void deleteList() {
     // Get current tab/list.
     TabController tab = this.listEditor.getCurrentTab();
     // Abort if List Editor is empty.
-    if ( tab == null ) return;
+    if ( tab == null )
+        return;
     int listIndex = tab.listIndex;
     // Remove from List Editor.
     this.listEditor.removeList(listIndex);
@@ -113,7 +110,7 @@ public void deleteList() {
 public void setListTitle(int listIndex, String newTitle) {
     // Trim newTitle.
     newTitle = newTitle.trim().substring(0, Math.min(newTitle.length(), 32));
-    if ( newTitle.length() == 0 ) {newTitle = "Todo List";}
+    if ( newTitle.length() == 0 ) { newTitle = "Todo List"; }
 
     // Change list title.
     App.mem.get(listIndex).title(newTitle);
@@ -132,7 +129,7 @@ public void newItem(Item item) throws IOException {
     // Get current tab/list.
     TabController tab = this.listEditor.getCurrentTab();
     // Abort if List Editor is empty.
-    if ( tab == null ) {return;}
+    if ( tab == null ) { return; }
     int listIndex = tab.listIndex;
     List list = App.mem.get(listIndex);
     // Add the item to the list.
@@ -145,7 +142,8 @@ public void newItem(Item item) throws IOException {
     this.workspaceView.addItem(listIndex, item);
 }
 
-//
+//  Pre-condition:  listIndex and itemIndex are valid list and item indexes.
+//  Post-condition: Removes the item from the list on the interface and in memory.
 public void deleteItem(int listIndex, int itemIndex) {
     // Remove from Workspace View.
     this.workspaceView.removeItem(listIndex, itemIndex);
@@ -158,53 +156,63 @@ public void deleteItem(int listIndex, int itemIndex) {
 
 /* ---------- Interface ---------- */
 
+//  Post-condition: Clears the Workspace View, List Editor, and App memory.
 public void resetGUI() {
     // Clear all lists.
     App.mem.clear();
     // Reset the Workspace Viewer.
-    this.workspaceView.reset();
+    this.workspaceView.clear();
     // Reset the List Editor.
-    this.listEditor.reset();
+    this.listEditor.clear();
 }
 
-public void goToList(int branchIndex) throws IOException {
+//  Pre-condition:  branchIndex is a Workspace View tree branch index.
+//  Post-condition: Opens the list's tab if it exists, creates one if not.
+public void openBranchInTab(int branchIndex) throws IOException {
+    // Get the corresponding list index from the branch.
     int listIndex = this.workspaceView.getListIndex(branchIndex);
-    this.listEditor.goToTab(listIndex);
+    // Open the list in the List Editor.
+    this.listEditor.openTab(listIndex);
 }
 
-public void toggleItemFilter(boolean completed) throws IOException {
+//  Pre-condition:  completedFilter is true for Completed Item filter, false
+//                  for Incomplete Item filter.
+//  Post-condition: Toggles the Completed or Incomplete Item filter.
+public void toggleItemFilter(boolean completedFilter) throws IOException {
     // Get the current tab/list
     TabController tab = this.listEditor.getCurrentTab();
+    // Abort if no list open in the List Editor.
+    if ( tab == null )
+        return;
     List list = App.mem.get(tab.listIndex);
 
-    if ( completed )
+    // Toggle the appropriate filter.
+    if ( completedFilter )
         tab.showCompleted = !tab.showCompleted;
     else
         tab.showIncomplete = !tab.showIncomplete;
-
     // Clear the tab.
     tab.clear();
-
-    // Repopulate the tab.
-    for (int i = 0; i < list.getItems().size(); i++) {
-        Item item = list.get(i);
-        if ( (item.completed() && tab.showCompleted) || (!item.completed() && tab.showIncomplete) )
-            tab.add(i);
-    }
+    // Repopulate the tab with the new filter conditions.
+    for (int i = 0; i < list.getItems().size(); i++)
+        tab.add(i); // Automatically filtered.
 }
 
+//  Pre-condition:  newList is true if the list has just been created.
+//                  i.e. not loaded from a file.
 public void promptForTitle(boolean newList) throws IOException {
     // Get the current tab.
     TabController tab = this.listEditor.getCurrentTab();
+    // Abort if no list is open in the List Editor.
     if ( tab == null )
         return;
     int listIndex = tab.listIndex;
 
-    // Create pop-up window.
+    // Create a new JavaFX pop-up window.
     final Stage popUp = new Stage();
     popUp.initModality(Modality.APPLICATION_MODAL);
     popUp.initOwner(this.stage);
-    // Load FXML
+    // Load FXML into the pop-up.
     FXMLLoader fxml = getFXML("views/newListPrompt");
     VBox promptBox = fxml.load();
     NewListPromptController pCont = fxml.getController();
@@ -218,35 +226,21 @@ public void promptForTitle(boolean newList) throws IOException {
 
 /* ---------- File Managing ---------- */
 
+//  Pre-condition:  The List Editor must contain at least one list.
+//  Post-condition: Prompts the user for a file location/name and saves
+//                  the current tab's list to the file.
 public void saveList() throws IOException {
     // Get current tab/list.
     TabController tab = this.listEditor.getCurrentTab();
-    if ( tab == null ) {return;}
+    // Abort if no list open in List Editor.
+    if ( tab == null ) { return; }
     List list = App.mem.get(tab.listIndex);
-    FileChooser fc = new FileChooser();
-    fc.setTitle("Save as...");
-    fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Todo List File", "*.todo"));
-    // Get file.
-    File file = fc.showSaveDialog(App.gui.stage);
-    if ( file == null ) {return;}
-    FileWriter writer = new FileWriter(file);
-    JSONArray lists = new JSONArray();
-    lists.put(new JSONObject(list.getSaveData()));
-    writer.write(new JSONObject().put("lists", lists).toString());
-    writer.close();
-}
 
-public File promptOpenFile() {
-    // Open file chooser.
-    FileChooser fc = FileHandler.getFileChooser();
-    // Get file.
-    return fc.showOpenDialog(App.gui.stage);
-}
-
-public File promptSaveFile() {
-    // Open file chooser.
-    FileChooser fc = FileHandler.getFileChooser();
-    // Get file.
-    return fc.showSaveDialog(App.gui.stage);
+    // Create new file chooser.
+    File file = FileHandler.promptSaveFile();
+    // Abort if file null (user cancels).
+    if ( file == null ) { return; }
+    // Write list to file.
+    FileHandler.writeList(file, list);
 }
 }

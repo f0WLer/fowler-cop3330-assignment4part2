@@ -1,24 +1,34 @@
 package ucf.assignments.data;
 
-import java.util.ArrayList;
 import ucf.assignments.todo.List;
 
+import java.util.ArrayList;
+
 public class AppMemory {
-    private final ArrayList<List> lists;
+/* ---------- Fields ---------- */
+private final ArrayList<List> lists;
 
-    public AppMemory() { this.lists = new ArrayList<>(); }
+/* ---------- Constructor ---------- */
+public AppMemory() { this.lists = new ArrayList<>(); }
 
-    public List get(int listIndex) { return this.lists.get(listIndex); }
-    public ArrayList<List> getAll() { return this.lists; };
+/* ---------- List Manipulation ---------- */
+// Returns the List at listIndex.
+public List getList(int listIndex) { return this.lists.get(listIndex); }
 
-public void add(List list) { this.lists.add(list); }
+// Returns all Lists.
+public ArrayList<List> getAllLists() { return this.lists; }
 
-public void remove(int listIndex) {
-        if (listIndex < this.lists.size())
-            this.lists.remove(listIndex);
+// Adds list to the current lists.
+public void addList(List list) { this.lists.add(list); }
+
+// Removes the List at listIndex from the current lists.
+public void removeList(int listIndex) {
+    if ( listIndex < this.lists.size() ) this.lists.remove(listIndex);
+
 }
-
+// Returns the number of lists.
 public int size() { return this.lists.size(); }
 
+// Removes all lists.
 public void clear() { this.lists.clear(); }
 }

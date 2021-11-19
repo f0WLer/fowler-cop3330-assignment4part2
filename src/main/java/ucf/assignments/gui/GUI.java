@@ -49,17 +49,15 @@ public void start(Stage stage) throws Exception {
     stage.show();
 }
 
-
-
 /* ---------- List Manipulation ---------- */
 
 //  Pre-condition:  list is a new list not in App's memory.
 //                  fromFile true if list was loaded from a file.
 //  Post-condition: Adds the list to the App's memory and the interface,
-//                  prompting for a title if fromFile is false.
+//                  prompting for a getTitle if fromFile is false.
 public void newList(List list, boolean fromFile) throws IOException {
     // Add to the App lists.
-    App.mem.add(list);
+    App.mem.addList(list);
     int listIndex = App.mem.size() - 1;
     // Open in the List Editor.
     listEditor.newTab(list, listIndex, fromFile);
@@ -83,7 +81,7 @@ public void clearList() {
     this.workspaceView.clearList(listIndex);
 
     // Clear the list in memory.
-    App.mem.get(listIndex).clear();
+    App.mem.getList(listIndex).clear();
 }
 
 //  Pre-condition:  The List Editor must contain at least one list.
@@ -92,8 +90,7 @@ public void deleteList() {
     // Get current tab/list.
     TabController tab = this.listEditor.getCurrentTab();
     // Abort if List Editor is empty.
-    if ( tab == null )
-        return;
+    if ( tab == null ) return;
     int listIndex = tab.listIndex;
     // Remove from List Editor.
     this.listEditor.removeList(listIndex);
@@ -101,19 +98,19 @@ public void deleteList() {
     // Remove from Workspace View.
     this.workspaceView.removeList(listIndex);
     // Remove from memory.
-    App.mem.remove(listIndex);
+    App.mem.removeList(listIndex);
 }
 
 //  Pre-condition:  listIndex is an index to a list in memory.
 //                  newTitle length 0 < n chars <= 32.
-//  Post-condition: Sets the title of the list to the new title.
+//  Post-condition: Sets the getTitle of the list to the new getTitle.
 public void setListTitle(int listIndex, String newTitle) {
     // Trim newTitle.
     newTitle = newTitle.trim().substring(0, Math.min(newTitle.length(), 32));
     if ( newTitle.length() == 0 ) { newTitle = "Todo List"; }
 
-    // Change list title.
-    App.mem.get(listIndex).title(newTitle);
+    // Change list getTitle.
+    App.mem.getList(listIndex).setTitle(newTitle);
     // Update in List Editor.
     this.listEditor.renameTab(listIndex, newTitle);
     // Update in WorkspaceView.
@@ -131,9 +128,9 @@ public void newItem(Item item) throws IOException {
     // Abort if List Editor is empty.
     if ( tab == null ) { return; }
     int listIndex = tab.listIndex;
-    List list = App.mem.get(listIndex);
+    List list = App.mem.getList(listIndex);
     // Add the item to the list.
-    App.mem.get(listIndex).add(item);
+    App.mem.getList(listIndex).add(item);
     // Get the index of the new item -- the end of the list.
     int itemIndex = list.size() - 1;
     // Add the new card to the list.
@@ -150,7 +147,7 @@ public void deleteItem(int listIndex, int itemIndex) {
     // Remove from List Editor.
     this.listEditor.removeItem(listIndex, itemIndex);
     // Remove from App memory.
-    App.mem.get(listIndex).remove(itemIndex);
+    App.mem.getList(listIndex).remove(itemIndex);
 }
 
 
@@ -182,15 +179,12 @@ public void toggleItemFilter(boolean completedFilter) throws IOException {
     // Get the current tab/list
     TabController tab = this.listEditor.getCurrentTab();
     // Abort if no list open in the List Editor.
-    if ( tab == null )
-        return;
-    List list = App.mem.get(tab.listIndex);
+    if ( tab == null ) return;
+    List list = App.mem.getList(tab.listIndex);
 
     // Toggle the appropriate filter.
-    if ( completedFilter )
-        tab.showCompleted = !tab.showCompleted;
-    else
-        tab.showIncomplete = !tab.showIncomplete;
+    if ( completedFilter ) tab.allowCompleted = !tab.allowCompleted;
+    else tab.allowIncomplete = !tab.allowIncomplete;
     // Clear the tab.
     tab.clear();
     // Repopulate the tab with the new filter conditions.
@@ -204,8 +198,7 @@ public void promptForTitle(boolean newList) throws IOException {
     // Get the current tab.
     TabController tab = this.listEditor.getCurrentTab();
     // Abort if no list is open in the List Editor.
-    if ( tab == null )
-        return;
+    if ( tab == null ) return;
     int listIndex = tab.listIndex;
 
     // Create a new JavaFX pop-up window.
@@ -234,13 +227,13 @@ public void saveList() throws IOException {
     TabController tab = this.listEditor.getCurrentTab();
     // Abort if no list open in List Editor.
     if ( tab == null ) { return; }
-    List list = App.mem.get(tab.listIndex);
+    List list = App.mem.getList(tab.listIndex);
 
     // Create new file chooser.
     File file = FileHandler.promptSaveFile();
     // Abort if file null (user cancels).
     if ( file == null ) { return; }
     // Write list to file.
-    FileHandler.writeList(file, list);
+    FileHandler.writeToFile(file, list);
 }
 }

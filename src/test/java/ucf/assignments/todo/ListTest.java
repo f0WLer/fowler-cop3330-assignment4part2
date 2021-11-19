@@ -9,9 +9,9 @@ class ListTest {
     @Test
     void title() {
         /*
-        - Create a list with one title. Store this title in a temp variable.
-        - Use List.title() and rename the list.
-        - Assert that the old temp title and the new List.title are different.
+        - Create a list with one getTitle. Store this getTitle in a temp variable.
+        - Use List.getTitle() and rename the list.
+        - Assert that the old temp getTitle and the new List.getTitle are different.
          */
     }
 
@@ -19,7 +19,7 @@ class ListTest {
     void addItem() {
         /*
         - Create a new empty list.
-        - use List.add x times.
+        - use List.addList x times.
         - Assert that List.items is x length.
          */
     }
@@ -27,8 +27,8 @@ class ListTest {
     @Test
     void removeItem() {
         /*
-        - Create a new list and add x items to it.
-        - Use List.deleteItem() to remove y items.
+        - Create a new list and addList x items to it.
+        - Use List.deleteItem() to removeList y items.
         - Assert that the new size of this list is x - y.
          */
     }

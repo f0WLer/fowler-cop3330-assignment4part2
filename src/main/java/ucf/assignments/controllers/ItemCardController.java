@@ -13,112 +13,102 @@ import java.time.LocalDate;
 
 
 public class ItemCardController {
-		/* ---------- FXML Fields ---------- */
-		@FXML
-		private Pane root;
-		@FXML
-		private Pane checkPane;
-		@FXML
-		private Pane delPane;
-		@FXML
-		private TextArea description;
-		@FXML
-		private DatePicker due;
+/* ---------- FXML Fields ---------- */
+@FXML
+private Pane root;
+@FXML
+private Pane checkPane;
+@FXML
+private Pane delPane;
+@FXML
+private TextArea description;
+@FXML
+private DatePicker due;
 
-		/* ---------- Fields ---------- */
-		private TabController tab;
-		private Boolean completed;
+/* ---------- Fields ---------- */
+private TabController tab;
+private Boolean completed;
+// itemIndex property getter.
+private int itemIndex() { return (int)this.root.getProperties().get("itemIndex"); }
 
-		// 'listIndex' and 'itemIndex' property getters.
-		private int listIndex() { return (int)this.root.getProperties().get("listIndex"); }
-		private int itemIndex() { return (int)this.root.getProperties().get("itemIndex"); }
+/* ---------- Initializer ---------- */
+//  Pre-condition:  tab is the controller of the tab that this card belongs to.
+//  Post-condition: Populates the controller with its corresponding item's data.
+public void init(TabController tab, int itemIndex) {
+    this.tab = tab;
+    this.root.getProperties().put("itemIndex", itemIndex);
 
-		/* ---------- Initializer ---------- */
-		public void init(TabController tab, int listIndex, int itemIndex) {
-				this.tab = tab;
-				this.root.getProperties().put("listIndex", listIndex);
-				this.root.getProperties().put("itemIndex", itemIndex);
+    // Populate the card's properties with its corresponding item's data.
+    Item item = App.mem.getList(this.tab.listIndex).get(itemIndex);
+    // Description.
+    this.description.setText(item.getDescription());
+    // Completed/Incomplete state.
+    this.completed = item.getCompleted();
+    this.updateCheckButton();
+    // Due date.
+    this.due.setValue(item.getDue().toLocalDate());
 
-				// Populate the card's properties with its corresponding item's data.
-				Item item = App.mem.get(listIndex).get(itemIndex);
-				this.description.setText(item.description());
-
-				this.completed = item.completed();
-				this.updateCheckButton();
-
-				this.due.setValue(item.due().toLocalDate());
-
-				// Add description "on change" listener.
-				description.focusedProperty().addListener(this::changeDescription);
-
-				// Add due date "on change" listener
-				due.valueProperty().addListener(this::changeDue);
-		}
-
-
-		/* ---------- Item Data Manipulation ---------- */
-
-		public void pressCheckButton() {
-				// Flip item.completed property.
-				this.completed = !this.completed;
-				// Update the item at index 'itemIndex' from list at index 'listIndex' in App.mem.
-				App.mem.get(this.listIndex()).get(this.itemIndex()).completed(this.completed);
-				// If the item's new compeleted state doesn't pass the tab's item filter, remove it.
-				if ((this.completed && !tab.showCompleted) || (!this.completed && !tab.showIncomplete)) {
-						this.tab.getBody().getChildren().remove(this.root);
-						return;
-				}
-				// Otherwise, update the button's appearance.
-				this.updateCheckButton();
-		}
-
-		public void pressDelButton() { App.gui.deleteItem(this.listIndex(), this.itemIndex()); }
-
-		public void changeDescription(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
-				// If newPropertyValue is false, the description has left focus, so update changes made.
-				if (!newPropertyValue) {
-						String text = description.getText().trim();
-						text = text.substring(0, Math.min(text.length(), 256));
-						description.setText(text);
-						// Update the corresponding item's description.
-						App.mem.get(this.listIndex()).getItems().get(this.itemIndex()).description(description.getText());
-				}
-		}
-
-		public void changeDue(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
-				App.mem.get(this.listIndex()).getItems().get(this.itemIndex()).due(new DueDate(newValue));
-		}
+    // Add getDescription "on change" listener.
+    description.focusedProperty().addListener(this::changeDescription);
+    // Add getDue date "on change" listener
+    due.valueProperty().addListener(this::changeDue);
+}
 
 
-		/* ---------- Auxiliary ---------- */
+/* ---------- Item Data Manipulation ---------- */
+@FXML
+private void pressCheckButton() {
+    // Flip item.getCompleted property.
+    this.completed = !this.completed;
+    // Update the item at index 'itemIndex' from list at index 'listIndex' in App.mem.
+    App.mem.getList(this.tab.listIndex).get(this.itemIndex()).setCompleted(this.completed);
+    // If the item's new getCompleted state doesn't pass the tab's item filter, removeList it.
+    if ( (this.completed && !tab.allowCompleted) || (!this.completed && !tab.allowIncomplete) ) {
+        this.tab.getBody().getChildren().remove(this.root);
+        return;
+    }
+    // Otherwise, update the button's appearance.
+    this.updateCheckButton();
+}
 
-		public void highlightCheckButton() {
-				// Highlight the opposite state (completed: green->grey, incomplete: grey->green).
-				if (!this.completed)
-						checkPane.setStyle("-fx-background-color: rgb(95, 185, 95)");
-				else
-						checkPane.setStyle("-fx-background-color: rgb(185, 185, 185)");
-		}
-		public void unhighlightCheckButton() {
-				// Same principle as highlightCheckButton().
-				if (!this.completed)
-						checkPane.setStyle("-fx-background-color: rgb(185, 185, 185)");
-				else
-						checkPane.setStyle("-fx-background-color: rgb(95, 185, 95)");
-		}
+@FXML
+private void pressDelButton() { App.gui.deleteItem(this.tab.listIndex, this.itemIndex()); }
+@FXML
+private void changeDescription(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+    // If newPropertyValue is false, the getDescription has left focus, so update changes made.
+    if ( !newPropertyValue ) {
+        // Trim whitespace and cut off text at 256 characters.
+        String text = description.getText().trim();
+        text = text.substring(0, Math.min(text.length(), 256));
+        // Update the corresponding item's getDescription.
+        App.mem.getList(this.tab.listIndex).getItems().get(this.itemIndex()).setDescription(text);
+        description.setText(text);
+    }
+}
+@FXML
+private void changeDue(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+    App.mem.getList(this.tab.listIndex).getItems().get(this.itemIndex()).setDue(new DueDate(newValue));
+}
 
-		public void updateCheckButton() {
-				// If completed, set color to green.
-				if (this.completed)
-						checkPane.setStyle("-fx-background-color: rgb(95, 185, 95)");
-				else
-						checkPane.setStyle("-fx-background-color: rgb(185, 185, 185)");
-		}
-
-		public void highlightDelButton() {
-				delPane.setStyle("-fx-background-color: rgb(185, 95, 95)");
-		}
-		public void unhighlightDelButton() {
-				delPane.setStyle("-fx-background-color: rgb(185, 185, 185)");
-		}
+/* ---------- Auxiliary ---------- */
+private void updateCheckButton() {
+    // If getCompleted, set color to green.
+    if ( this.completed ) checkPane.setStyle("-fx-background-color: rgb(95, 185, 95)");
+    else checkPane.setStyle("-fx-background-color: rgb(185, 185, 185)");
+}
+@FXML
+private void highlightCheckButton() {
+    // Highlight the opposite state (getCompleted: green->grey, incomplete: grey->green).
+    if ( !this.completed ) checkPane.setStyle("-fx-background-color: rgb(95, 185, 95)");
+    else checkPane.setStyle("-fx-background-color: rgb(185, 185, 185)");
+}
+@FXML
+private void unhighlightCheckButton() {
+    if ( !this.completed ) checkPane.setStyle("-fx-background-color: rgb(185, 185, 185)");
+    else checkPane.setStyle("-fx-background-color: rgb(95, 185, 95)");
+}
+@FXML
+private void highlightDelButton() { delPane.setStyle("-fx-background-color: rgb(185, 95, 95)"); }
+@FXML
+private void unhighlightDelButton() { delPane.setStyle("-fx-background-color: rgb(185, 185, 185)"); }
 }

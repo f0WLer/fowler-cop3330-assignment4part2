@@ -16,7 +16,6 @@ import ucf.assignments.gui.WorkspaceView;
 import java.io.IOException;
 
 import static ucf.assignments.gui.Auxiliary.getFXML;
-import static ucf.assignments.gui.Auxiliary.setAnchors;
 
 public class GUIController {
 
@@ -26,31 +25,33 @@ private AnchorPane appBody;
 
 /* ---------- Initializer ---------- */
 public void initialize() throws IOException {
-	// Load the Menu Bar from FXML.
-	FXMLLoader fxml = getFXML("views/menuBar");
-	MenuBar menuBar = fxml.load();
-	assert menuBar != null : "Menu Bar failed to load.";
-	// Assign to the GUI.
-	App.gui.menuBar = fxml.getController();
+    // Load the Menu Bar from FXML.
+    FXMLLoader fxml = getFXML("views/menuBar");
+    MenuBar menuBar = fxml.load();
+    assert menuBar != null : "Menu Bar failed to load.";
+    // Assign to the GUI.
+    App.gui.menuBar = fxml.getController();
 
-	// Load the Workspace View from FXML.
-	fxml = getFXML("views/menuBar");
-	TreeView<String> workspaceView = fxml.load();
-	assert workspaceView != null : "Workspace View failed to load.";
-	// Initialize the WorkspaceView class and assign to the GUI.
-	App.gui.workspaceView = new WorkspaceView(workspaceView);
+    // Load the Workspace View from FXML.
+    fxml = getFXML("views/workspaceViewer");
+    TreeView<String> workspaceView = fxml.load();
+    assert workspaceView != null : "Workspace View failed to load.";
+    // Initialize the WorkspaceView class and assign to the GUI.
+    App.gui.workspaceView = new WorkspaceView(workspaceView);
+
 
     // Load the List Editor from FXML.
     fxml = getFXML("views/listEditor");
     TabPane listEditor = fxml.load();
-	assert listEditor != null : "Menu Bar failed to load.";
-	// Initialize the ListEditor class and assign to the GUI.
+    assert listEditor != null : "Menu Bar failed to load.";
+    // Initialize the ListEditor class and assign to the GUI.
     App.gui.listEditor = new ListEditor(listEditor);
 
     // Create a separator to go between the Workspace View and List Editor.
     Separator s = new Separator(Orientation.VERTICAL);
     s.setLayoutX(259);
-    setAnchors(s, 0.0, 744.0, 0.0, 256.0);
+    AnchorPane.setTopAnchor(s, 744.0);
+    AnchorPane.setBottomAnchor(s, 256.0);
 
     // Add the menu bar to the App's root element.
     ((VBox)appBody.getParent()).getChildren().add(0, menuBar);

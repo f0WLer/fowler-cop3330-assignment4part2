@@ -1,24 +1,23 @@
 package ucf.assignments.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
-import javafx.stage.FileChooser;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import ucf.assignments.App;
 import ucf.assignments.data.FileHandler;
 import ucf.assignments.todo.Item;
 import ucf.assignments.todo.List;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class MenuBarController {
 
+@FXML
+public CheckMenuItem incompleteCheck;
+@FXML
+public CheckMenuItem completedCheck;
 /* ---------- FXML Fields ---------- */
 @FXML
 private MenuItem saveList;
@@ -30,14 +29,8 @@ private MenuItem changeTitle;
 private MenuItem newItem;
 @FXML
 private MenuItem clearItems;
-@FXML
-private CheckMenuItem incompleteCheck;
-@FXML
-private CheckMenuItem completedCheck;
 
 /* ---------- Fields ---------- */
-private final Object[] listDependentItems = { this.saveList, this.deleteList, this.completedCheck, this.incompleteCheck, this.changeTitle, this.newItem, this.clearItems};
-
 /* ---------- Initializer ---------- */
 // Disable any menu items that can't be used without a list in the List Editor.
 public void initialize() { this.toggleListItems(false); }
@@ -45,8 +38,13 @@ public void initialize() { this.toggleListItems(false); }
 /* ---------- Auxiliary ---------- */
 // Toggles all menu items that can't be used without a list in the List Editor.
 public void toggleListItems(boolean state) {
-    for (Node n : (Node[])this.listDependentItems)
-        n.setDisable(!state);
+    this.saveList.setDisable(!state);
+    this.deleteList.setDisable(!state);
+    this.completedCheck.setDisable(!state);
+    this.incompleteCheck.setDisable(!state);
+    this.changeTitle.setDisable(!state);
+    this.newItem.setDisable(!state);
+    this.clearItems.setDisable(!state);
 }
 
 /* ---------- MenuBar Methods ---------- */
@@ -58,10 +56,10 @@ private void file_new() throws IOException {
 @FXML
 private void file_open() throws IOException {
     File file = FileHandler.promptOpenFile();
-    if ( file == null )
-        return;
-    // Parse file into lists and add each list to the GUI.
+    if ( file == null ) return;
+    // Parse file into lists and addList each list to the GUI.
     ArrayList<List> newLists = FileHandler.readFile(file);
+    assert newLists != null : "File read error";
     for (List newList : newLists)
         App.gui.newList(newList, true);
 }
@@ -71,12 +69,7 @@ private void file_saveAs() throws IOException {
     File file = FileHandler.promptSaveFile();
 
     if ( file == null ) { return; }
-    FileWriter writer = new FileWriter(file);
-    JSONArray lists = new JSONArray();
-    for (List l : App.mem.getAll())
-        lists.put(new JSONObject(l.getSaveData()));
-    writer.write(new JSONObject().put("lists", lists).toString());
-    writer.close();
+    FileHandler.writeToFile(file, App.mem.getAllLists());
 }
 
 @FXML

@@ -10,16 +10,16 @@ class ItemTest {
     void description() {
         /*
         - Create a new item with a Description X.
-        - Assert that Item.description() returns Description X.
-        - Use the Item.description(String) getter to change the item's description to Description Y.
-        - Assert that Item.description() now returns Description Y.
+        - Assert that Item.getDescription() returns Description X.
+        - Use the Item.getDescription(String) getter to change the item's getDescription to Description Y.
+        - Assert that Item.getDescription() now returns Description Y.
          */
     }
 
     @Test void completed() {
         /*
-        - Use Item.completed(true) and assert that Item.completed() returns true.
-        - Use Item.completed(false) and assert that Item.completed() now returns false.
+        - Use Item.getCompleted(true) and assert that Item.getCompleted() returns true.
+        - Use Item.getCompleted(false) and assert that Item.getCompleted() now returns false.
          */
     }
 }

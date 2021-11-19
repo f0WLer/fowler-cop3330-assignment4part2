@@ -14,74 +14,81 @@ import java.io.IOException;
 import static ucf.assignments.gui.Auxiliary.getFXML;
 
 public class TabController {
-/* ---------- Fields ---------- */
-public boolean showCompleted;
-public boolean showIncomplete;
-public int listIndex;
 /* ---------- FXML Fields ---------- */
 @FXML
 private VBox body;
 @FXML
 private Tab root;
-
 // Getters
-public VBox getBody() {return this.body;}
+public VBox getBody() { return this.body; }
+public Tab getRoot() { return this.root; }
 
-public Tab getRoot() {return this.root;}
+/* ---------- Fields ---------- */
+public boolean allowCompleted;
+public boolean allowIncomplete;
+public int listIndex;
 
 /* ---------- Initializer ---------- */
 public void init(List list, int listIndex) throws IOException {
-	// Set default filter settings;
-	this.showCompleted = true;
-	this.showIncomplete = true;
-
-	// listIndex is index of this tab in App.lists().
-	this.listIndex = listIndex;
-
-	// Set tab's title.
-	this.root.setText(list.title());
-
-	if ( list.getItems().size() == 0 )
-		return;
-
-	// For item in list:
-	for (int i = 0;i < list.getItems().size();i++) {
-		// Create and add a new item card
-		add(i);
-	}
+    // Set default filter settings;
+    this.allowCompleted = true;
+    this.allowIncomplete = true;
+    // listIndex is index of this tab in App.lists().
+    this.listIndex = listIndex;
+    // Set tab's getTitle.
+    this.root.setText(list.getTitle());
+    // Create and addList a new item card for each item in the list.
+    for (int i = 0; i < list.getItems().size(); i++)
+        add(i);
 }
 
 /* ---------- Item/Card Manipulation ---------- */
+//  Pre-condition:  itemIndex is a valid index to an existing item in the list.
+//  Post-condition: Adds the item as a card to the tab.
 public void add(int itemIndex) throws IOException {
-	assert itemIndex < App.mem.get(this.listIndex).size() : "item index OOB";
-	// Abort if item doesn't pass through tab's filter.
-	if ( !this.passesFilter(itemIndex) ) { return; }
-	FXMLLoader cardLoader = getFXML("views/itemCard");
-	Pane card = cardLoader.load();
-	((ItemCardController)cardLoader.getController()).init(this, this.listIndex, itemIndex);
-
-	body.getChildren().add(card);
+    assert itemIndex < App.mem.getList(this.listIndex).size() : "item index out of bounds";
+    // Abort if item doesn't pass through tab's filter.
+    if ( !this.passesFilter(itemIndex) ) { return; }
+    // Load a new card for the item.
+    FXMLLoader fxml = getFXML("views/itemCard");
+    Pane card = fxml.load();
+    // Initialize the card's controller.
+    ((ItemCardController)fxml.getController()).init(this, itemIndex);
+    // Add the card to the tab.
+    body.getChildren().add(card);
 }
 
-public void clear() {body.getChildren().clear();}
-
+//  Post-condition: Clears the tab of all cards.
+public void clear() { body.getChildren().clear(); }
 
 /* ---------- Auxiliary ---------- */
+//  Pre-condition:  itemIndex is a valid index to an item in the list.
+//  Post-condition: Returns true if the item passes through the tab's
+//                  current filter settings.
 public boolean passesFilter(int itemIndex) {
-	Item item = App.mem.get(this.listIndex).get(itemIndex);
-	if (item.completed())
-		return this.showCompleted;
-	else
-		return this.showIncomplete;
+    assert itemIndex < App.mem.getList(this.listIndex).size() : "item index out of bounds";
+    // Get the item from the list.
+    Item item = App.mem.getList(this.listIndex).get(itemIndex);
+    // Compare the item's getCompleted property to the corresponding filter.
+    if ( item.getCompleted() )
+        return this.allowCompleted;
+    else
+        return this.allowIncomplete;
 }
 
+//  Pre-condition:  itemIndex is a valid index to an item in the list.
+//  Post-condition: Returns the index of the item's card within the tab.
+//                  If card does not exist, returns -1.
 public int getCardIndex(int itemIndex) {
-	for (int i = 0; i < this.body.getChildren().size(); i++) {
-		Pane card = (Pane)this.body.getChildren().get(i);
-		if ((int)card.getProperties().get("itemIndex") == itemIndex)
-			return i;
-	}
-	return -1;
+    // Traverse through the tab's cards.
+    for (int i = 0; i < this.body.getChildren().size(); i++) {
+        Pane card = (Pane)this.body.getChildren().get(i);
+        // If this card's itemIndex property matches, return it.
+        if ( (int)card.getProperties().get("itemIndex") == itemIndex )
+            return i;
+    }
+    // Item card not found in tab.
+    return -1;
 }
 
 }

@@ -65,9 +65,11 @@ private void file_open() throws IOException {
 }
 @FXML
 private void file_saveAs() throws IOException {
+    // Abort if no lists to save.
+    if (App.mem.getAllLists().size() == 0) return;
     // Get file.
     File file = FileHandler.promptSaveFile();
-
+    // Write to file.
     if ( file == null ) { return; }
     FileHandler.writeToFile(file, App.mem.getAllLists());
 }
@@ -97,6 +99,6 @@ private void list_save() throws IOException { App.gui.saveList(); }
 private void list_delete() { App.gui.deleteList(); }
 
 @FXML
-private void help_usage() { }
+private void help_usage() throws IOException { App.gui.listEditor.openUsageTab(); }
 
 }

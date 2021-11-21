@@ -22,9 +22,11 @@ private final TabPane pane;
 private final ArrayList<TabController> tabs = new ArrayList<>();
 
 /* ---------- Constructor ---------- */
-public ListEditor(TabPane node) {
+public ListEditor(TabPane node) throws IOException {
     // Set the tab pane.
     this.pane = node;
+    // Add Usage Tab to editor.
+    this.openUsageTab();
     // Add tab select listener.
     this.pane.getSelectionModel().selectedItemProperty().addListener(this::updateMenuBar);
 }
@@ -119,6 +121,20 @@ public void openTab(int listIndex) throws IOException {
 
 /* ---------- Auxiliary ---------- */
 
+public void openUsageTab() throws IOException {
+    // Abort if the Usage tab is already open.
+    if ( this.pane.getSelectionModel().getSelectedItem() != null && this.pane.getSelectionModel().getSelectedItem().getProperties().get("isUsageTab") != null )
+        return;
+    // Load the Usage tab from FXML.
+    FXMLLoader fxmlLoader = getFXML("views/usageTab");
+    Tab usageTab = fxmlLoader.load();
+    usageTab.getProperties().put("isUsageTab", true);
+    // Add the Usage tab to the TabPane.
+    this.pane.getTabs().add(usageTab);
+    // Go to the Usage tab.
+    this.pane.getSelectionModel().select(this.pane.getTabs().size() - 1);
+}
+
 //  Pre-condition:  listIndex is a valid index of an item open in the List Editor.
 //  Post-condition: Returns the controller to the item's tab in the List Editor.
 private TabController getTab(int listIndex) {
@@ -160,8 +176,11 @@ private void removeTab(int listIndex) {
 //  Tab select listener method. If the List Editor is empty, disables all list
 //  manipulating menu items. If a tab is open, updates the item filter menu items.
 private void updateMenuBar(ObservableValue<? extends Tab> ov, Tab oldTab, Tab newTab) {
-    // If no tab is open, disable all list manipulating menu items.
-    if ( newTab == null ) {
+    // If the old tab was the Usage tab, close it.
+    if ( oldTab != null && oldTab.getProperties().get("isUsageTab") != null )
+        this.pane.getTabs().remove(oldTab);
+    // If no tab is open or the new tab is the Usage tab, disable all list manipulating menu items.
+    if ( newTab == null || newTab.getProperties().get("isUsageTab") != null ) {
         App.gui.menuBar.toggleListItems(false);
         return;
     }

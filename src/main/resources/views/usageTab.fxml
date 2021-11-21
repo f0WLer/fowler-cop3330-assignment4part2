@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<Tab text="Usage" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1">
+    <AnchorPane>
+        <ScrollPane layoutX="14.0" layoutY="14.0" style="-fx-background: rgb(225, 225, 225);"
+                    AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0"
+                    AnchorPane.topAnchor="12.0">
+            <VBox fx:id="body" maxWidth="696.0" minHeight="543.0" minWidth="696.0" prefWidth="696.0"
+                  stylesheets="@styles/itemTab.css">
+                <ImageView fitHeight="620.0" fitWidth="696.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@img/usage_tab.png"/>
+                </ImageView>
+            </VBox>
+        </ScrollPane>
+    </AnchorPane>
+</Tab>

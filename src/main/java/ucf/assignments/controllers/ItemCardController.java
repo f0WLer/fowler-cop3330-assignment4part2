@@ -87,7 +87,11 @@ private void changeDescription(ObservableValue<? extends Boolean> arg0, Boolean 
 }
 @FXML
 private void changeDue(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
-    App.mem.getList(this.tab.listIndex).getItems().get(this.itemIndex()).setDue(new DueDate(newValue));
+    // If new date is null, remove the current due date. If new date is a valid date, set the due date to that date.
+    if ( newValue == null )
+        App.mem.getList(this.tab.listIndex).getItems().get(this.itemIndex()).setDue(null);
+    else
+        App.mem.getList(this.tab.listIndex).getItems().get(this.itemIndex()).setDue(new DueDate(newValue));
 }
 
 /* ---------- Auxiliary ---------- */

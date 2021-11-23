@@ -6,12 +6,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import ucf.assignments.App;
 import ucf.assignments.controllers.TabController;
+import ucf.assignments.data.FileHandler;
 import ucf.assignments.todo.List;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static ucf.assignments.gui.Auxiliary.getFXML;
 
 public class ListEditor {
 
@@ -40,7 +39,7 @@ public TabPane getTabPane() { return this.pane; }
 //  Post-condition: Adds the list as a tab in the List Editor.
 public void newTab(List list, int listIndex, boolean fromFile) throws IOException {
     // Load new tab from FXML.
-    FXMLLoader fxml = getFXML("views/tab");
+    FXMLLoader fxml = FileHandler.getFXML("views/tab");
     Tab tab = fxml.load();
     // Initialize Tab.
     TabController controller = fxml.getController();
@@ -75,7 +74,7 @@ public void removeItem(int listIndex, int itemIndex) {
     // Abort if containing tab not open.
     if ( tab == null ) return;
     // Abort if item would not be in tab.
-    if ( !tab.passesFilter(itemIndex) ) return;
+    if ( tab.passesFilter(itemIndex) ) return;
     int cardIndex = tab.getCardIndex(itemIndex);
     // Abort if card not in tab.
     if ( cardIndex == -1 ) return;
@@ -126,22 +125,13 @@ public void openUsageTab() throws IOException {
     if ( this.pane.getSelectionModel().getSelectedItem() != null && this.pane.getSelectionModel().getSelectedItem().getProperties().get("isUsageTab") != null )
         return;
     // Load the Usage tab from FXML.
-    FXMLLoader fxmlLoader = getFXML("views/usageTab");
+    FXMLLoader fxmlLoader = FileHandler.getFXML("views/usageTab");
     Tab usageTab = fxmlLoader.load();
     usageTab.getProperties().put("isUsageTab", true);
     // Add the Usage tab to the TabPane.
     this.pane.getTabs().add(usageTab);
     // Go to the Usage tab.
     this.pane.getSelectionModel().select(this.pane.getTabs().size() - 1);
-}
-
-//  Pre-condition:  listIndex is a valid index of an item open in the List Editor.
-//  Post-condition: Returns the controller to the item's tab in the List Editor.
-private TabController getTab(int listIndex) {
-    // Go through each controller and find the item's tab's controller.
-    for (TabController t : this.tabs)
-        if ( t.listIndex == listIndex ) return t;
-    return null;
 }
 
 //  Pre-condition:  The List Editor must contain at least one list.
@@ -153,6 +143,15 @@ public TabController getCurrentTab() {
     if ( tabIndex == -1 ) return null;
     // Return the current opened tab.
     return this.tabs.get(tabIndex);
+}
+
+//  Pre-condition:  listIndex is a valid index of an item open in the List Editor.
+//  Post-condition: Returns the controller to the item's tab in the List Editor.
+private TabController getTab(int listIndex) {
+    // Go through each controller and find the item's tab's controller.
+    for (TabController t : this.tabs)
+        if ( t.listIndex == listIndex ) return t;
+    return null;
 }
 
 //  Pre-condition:  listIndex is the index of a list opened in the List Editor.
@@ -177,21 +176,20 @@ private void removeTab(int listIndex) {
 //  manipulating menu items. If a tab is open, updates the item filter menu items.
 private void updateMenuBar(ObservableValue<? extends Tab> ov, Tab oldTab, Tab newTab) {
     // If the old tab was the Usage tab, close it.
-    if ( oldTab != null && oldTab.getProperties().get("isUsageTab") != null )
-        this.pane.getTabs().remove(oldTab);
+    if ( oldTab != null && oldTab.getProperties().get("isUsageTab") != null ) this.pane.getTabs().remove(oldTab);
     // If no tab is open or the new tab is the Usage tab, disable all list manipulating menu items.
     if ( newTab == null || newTab.getProperties().get("isUsageTab") != null ) {
-        App.gui.menuBar.toggleListItems(false);
+        App.gui.getMenuBar().toggleListItems(false);
         return;
     }
     // If there's an opened tab set its filter menuItems.
     TabController tab = this.tabs.get(this.pane.getTabs().indexOf(newTab));
-    App.gui.menuBar.toggleListItems(true);
-    App.gui.menuBar.completedCheck.setSelected(tab.allowCompleted);
-    App.gui.menuBar.incompleteCheck.setSelected(tab.allowIncomplete);
+    App.gui.getMenuBar().toggleListItems(true);
+    App.gui.getMenuBar().completedCheck.setSelected(tab.allowCompleted);
+    App.gui.getMenuBar().incompleteCheck.setSelected(tab.allowIncomplete);
 }
 
 //  Pre-condition:  The List Editor must contain at least one list.
 //  Post-condition: Returns the index of the currently selected tab.
-public int currentTabIndex() { return this.pane.getSelectionModel().getSelectedIndex(); }
+private int currentTabIndex() { return this.pane.getSelectionModel().getSelectedIndex(); }
 }

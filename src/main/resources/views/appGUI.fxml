@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="628.0"
-      prefWidth="1006.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.controllers.GUIController">
+      prefWidth="1006.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.controllers.AppGUIController">
    <AnchorPane fx:id="appBody" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
                prefWidth="1006.0">
    </AnchorPane>

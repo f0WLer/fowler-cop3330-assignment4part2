@@ -18,6 +18,8 @@ public class WorkspaceView {
 /* ---------- FXML Elements ---------- */
 private final TreeView<String> tree;
 private final TreeItem<String> root;
+
+/* ---------- Fields ---------- */
 // Map of TreeView branches and their corresponding lists and items.
 private final ArrayList<branchMap> treeMap = new ArrayList<>();
 
@@ -191,9 +193,9 @@ public int getListIndex(int branchIndex) { return this.treeMap.get(branchIndex).
 // this.treeMap item class.
 public static class branchMap {
     // The branch's corresponding list.
-    int listIndex;
+    public int listIndex;
     // Each index is the index of a node in the branch.
     // Its value is the corresponding item's index in the branch's list..
-    ArrayList<Integer> nodes = new ArrayList<>();
+    public ArrayList<Integer> nodes = new ArrayList<>();
 }
 }

@@ -6,12 +6,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import ucf.assignments.App;
+import ucf.assignments.data.FileHandler;
 import ucf.assignments.todo.Item;
 import ucf.assignments.todo.List;
 
 import java.io.IOException;
-
-import static ucf.assignments.gui.Auxiliary.getFXML;
 
 public class TabController {
 /* ---------- FXML Fields ---------- */
@@ -48,9 +47,9 @@ public void init(List list, int listIndex) throws IOException {
 public void add(int itemIndex) throws IOException {
     assert itemIndex < App.mem.getList(this.listIndex).size() : "item index out of bounds";
     // Abort if item doesn't pass through tab's filter.
-    if ( !this.passesFilter(itemIndex) ) { return; }
+    if ( this.passesFilter(itemIndex) ) { return; }
     // Load a new card for the item.
-    FXMLLoader fxml = getFXML("views/itemCard");
+    FXMLLoader fxml = FileHandler.getFXML("views/itemCard");
     Pane card = fxml.load();
     // Initialize the card's controller.
     ((ItemCardController)fxml.getController()).init(this, itemIndex);

@@ -8,8 +8,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ucf.assignments.App;
 import ucf.assignments.controllers.MenuBarController;
-import ucf.assignments.controllers.NewListPromptController;
 import ucf.assignments.controllers.TabController;
+import ucf.assignments.controllers.TitlePromptController;
 import ucf.assignments.data.FileHandler;
 import ucf.assignments.todo.Item;
 import ucf.assignments.todo.List;
@@ -17,22 +17,24 @@ import ucf.assignments.todo.List;
 import java.io.File;
 import java.io.IOException;
 
-import static ucf.assignments.gui.Auxiliary.getFXML;
+public class AppGUI extends Application {
+/* ---------- Fields ---------- */
 
-public class GUI extends Application {
-// Main interface components.
-public MenuBarController menuBar;
-public WorkspaceView workspaceView;
-public ListEditor listEditor;
 // JavaFX Stage.
 public Stage stage;
+// Main interface components.
+private MenuBarController menuBar;
+private WorkspaceView workspaceView;
+private ListEditor listEditor;
 
 /* ---------- Constructor ---------- */
-public GUI() { }
+
+public AppGUI() { }
 
 /* ---------- JavaFX ---------- */
+
 // Launches JavaFX Application.
-public void launch() { Application.launch(GUI.class); }
+public void launch() { Application.launch(AppGUI.class); }
 
 @Override
 public void start(Stage stage) throws Exception {
@@ -42,12 +44,22 @@ public void start(Stage stage) throws Exception {
 
     // Set up JavaFX Stage.
     this.stage = stage;
-    FXMLLoader fxml = getFXML("views/AppGUI");
+    FXMLLoader fxml = FileHandler.getFXML("views/appGUI");
     this.stage.setScene(new Scene(fxml.load()));
 
     // Launch the app.
     stage.show();
 }
+
+/* ---------- Getters/Setters ---------- */
+
+// Menu Bar.
+public MenuBarController getMenuBar() { return this.menuBar; }
+public void setMenuBar(MenuBarController mb) { this.menuBar = mb; }
+// Workspace View.
+public void setWorkspaceView(WorkspaceView wv) { this.workspaceView = wv; }
+// List Editor.
+public void setListEditor(ListEditor le) { this.listEditor = le; }
 
 /* ---------- List Manipulation ---------- */
 
@@ -77,7 +89,7 @@ public void clearList() {
 
     // Clear the tab.
     tab.clear();
-    // Claer list in the Workspace View.
+    // Clear list in the Workspace View.
     this.workspaceView.clearList(listIndex);
 
     // Clear the list in memory.
@@ -117,7 +129,6 @@ public void setListTitle(int listIndex, String newTitle) {
     this.workspaceView.renameList(listIndex, newTitle);
 }
 
-
 /* ------------ Item Manipulation ---------- */
 
 //  Pre-condition:  The List Editor must have at least one list.
@@ -149,7 +160,6 @@ public void deleteItem(int listIndex, int itemIndex) {
     // Remove from App memory.
     App.mem.getList(listIndex).remove(itemIndex);
 }
-
 
 /* ---------- Interface ---------- */
 
@@ -192,8 +202,12 @@ public void toggleItemFilter(boolean completedFilter) throws IOException {
         tab.add(i); // Automatically filtered.
 }
 
+//  Post-condition: Opens the Usage tab in the List Editor.
+public void helpScreen() throws IOException { this.listEditor.openUsageTab(); }
+
 //  Pre-condition:  newList is true if the list has just been created.
 //                  i.e. not loaded from a file.
+//  Post-condition: Opens a new titlePrompt and prompts the user for a new title.
 public void promptForTitle(boolean newList) throws IOException {
     // Get the current tab.
     TabController tab = this.listEditor.getCurrentTab();
@@ -206,9 +220,9 @@ public void promptForTitle(boolean newList) throws IOException {
     popUp.initModality(Modality.APPLICATION_MODAL);
     popUp.initOwner(this.stage);
     // Load FXML into the pop-up.
-    FXMLLoader fxml = getFXML("views/newListPrompt");
+    FXMLLoader fxml = FileHandler.getFXML("views/titlePrompt");
     VBox promptBox = fxml.load();
-    NewListPromptController pCont = fxml.getController();
+    TitlePromptController pCont = fxml.getController();
     // Initialize pop-up.
     pCont.init(listIndex, popUp, newList);
     // Display pop-up.

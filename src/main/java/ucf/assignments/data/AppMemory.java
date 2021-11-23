@@ -6,12 +6,15 @@ import java.util.ArrayList;
 
 public class AppMemory {
 /* ---------- Fields ---------- */
-private final ArrayList<List> lists;
+
+private ArrayList<List> lists;
 
 /* ---------- Constructor ---------- */
+
 public AppMemory() { this.lists = new ArrayList<>(); }
 
 /* ---------- List Manipulation ---------- */
+
 // Returns the List at listIndex.
 public List getList(int listIndex) { return this.lists.get(listIndex); }
 
@@ -22,13 +25,11 @@ public ArrayList<List> getAllLists() { return this.lists; }
 public void addList(List list) { this.lists.add(list); }
 
 // Removes the List at listIndex from the current lists.
-public void removeList(int listIndex) {
-    if ( listIndex < this.lists.size() ) this.lists.remove(listIndex);
-
-}
-// Returns the number of lists.
-public int size() { return this.lists.size(); }
+public void removeList(int listIndex) { if ( listIndex < this.lists.size() ) this.lists.remove(listIndex); }
 
 // Removes all lists.
 public void clear() { this.lists.clear(); }
+
+// Returns the number of lists.
+public int size() { return this.lists.size(); }
 }

@@ -10,9 +10,7 @@ import java.time.LocalDate;
 
 public class DueDate {
 /* ---------- Fields ---------- */
-private int year;
-private int month;
-private int day;
+private int year, month, day;
 
 /* ---------- Constructors ---------- */
 // Default due -- One getMonth ahead.

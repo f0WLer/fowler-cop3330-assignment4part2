@@ -6,7 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ucf.assignments.App;
 
-public class NewListPromptController {
+public class TitlePromptController {
 /* ---------- FXML Fields ---------- */
 @FXML
 private TextField titleField;
@@ -22,14 +22,14 @@ private Stage stage;
 public void init(int listIndex, Stage stage, boolean newList) {
 	this.listIndex = listIndex;
 	this.stage = stage;
-	if ( !newList ) this.label.setText("Edit getTitle...");
+	if ( !newList ) this.label.setText("Rename " + App.mem.getList(listIndex).getTitle() + "...");
 }
 
 @FXML
 private void confirm() {
     // If the field has text, change the getTitle. Otherwise, do nothing.
     if ( !this.titleField.textProperty().getValue().trim().isEmpty() )
-        App.gui.setListTitle(this.listIndex, titleField.textProperty().getValueSafe());
+        App.gui.setListTitle(this.listIndex, titleField.textProperty().getValue().trim());
     // Close the popup.
     this.stage.close();
 }

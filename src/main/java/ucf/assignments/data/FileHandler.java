@@ -1,5 +1,6 @@
 package ucf.assignments.data;
 
+import javafx.fxml.FXMLLoader;
 import javafx.stage.FileChooser;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,8 +16,16 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileHandler {
+/* ---------- FXML Files ---------- */
+
+//  Pre-condition:  path is the path of the FXML file within /resources/ (i.e. "views/appGUI").
+//  Post-condition: Returns an FXMLLoader with its destination set to the FXML file at the path.
+public static FXMLLoader getFXML(String path) {
+    return new FXMLLoader(FileHandler.class.getResource("/" + path + ".fxml"));
+}
 
 /* ---------- File Load/Save ---------- */
+
 //  Pre-condition:  'file' is a valid .todo file to write 'lists' to.
 //  Post-condition: Writes the Lists as JSON objects to the file.
 public static void writeToFile(File file, ArrayList<List> lists) throws IOException {
@@ -65,6 +74,7 @@ public static ArrayList<List> readFile(File file) throws FileNotFoundException {
 }
 
 /* ---------- File Managing ---------- */
+
 //  Pre-condition:  The App's GUI must be initialized.
 //  Post-condition: Prompts the user for a file to open and returns it.
 public static File promptOpenFile() {
@@ -86,7 +96,7 @@ public static File promptSaveFile() {
 }
 
 //  Post-condition: Returns a list file chooser the appropriate getTitle and extension filter.
-public static FileChooser getFileChooser(String title) {
+private static FileChooser getFileChooser(String title) {
     FileChooser fc = new FileChooser();
     fc.setTitle(title);
     fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Todo List Files", "*.todo"));

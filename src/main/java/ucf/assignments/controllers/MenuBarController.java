@@ -99,6 +99,6 @@ private void list_save() throws IOException { App.gui.saveList(); }
 private void list_delete() { App.gui.deleteList(); }
 
 @FXML
-private void help_usage() throws IOException { App.gui.listEditor.openUsageTab(); }
+private void help_usage() throws IOException { App.gui.helpScreen(); }
 
 }

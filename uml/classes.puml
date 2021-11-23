@@ -1,80 +1,207 @@
 @startuml
-
-App <-- List
-App <-- FileHandler
-App <-- Util
 class App {
-    -{static} todoLists: ArrayList<List>
-
-    +{static} getLists(): ArrayList<List>
-    +{static} removeList(index: int): void
-    +{static} addList(): List
-
-    +{static} saveList(index: int, filePath: String): void
-    +{static} saveAllLists(filePath: String): void
-    +{static} loadList(filePath: String): void
-
-    +{static} start(stage: Stage): void
+    +{static}mem: AppMemory
+    +{static}gui: AppGUI
+    __Methods__
+    +{static}main(args: String[])
+    +{static}spitError(t: Thread, e: Throwable)
 }
 
-List *-- Item
+class AppMemory {
+    -lists: ArrayList<List>
+    __Constructor__
+    +AppMemory()
+    __Methods__
+    ..List Manipulation..
+    +getList(listIndex: int): List
+    +getAllLists(): ArrayList<List>
+    +addList(list: List)
+    +removeList(listIndex: int)
+    +clear()
+    +size(): int
+}
+
+class FileHandler {
+    ..FXML Files..
+    +{static} getFXML(path: String): FXMLLoader
+    ..File Load/Save..
+    +{static} writeToFile(file: File, lists: ArrayList<List>)
+    +{static} writeToFile(file: File, list: List) <<overload>>
+    +{static} readFile(file: File): ArrayList<List>
+    ..File Managing..
+    +{static} promptOpenFile(): File
+    +{static} promptSaveFile(): File
+    -{static} getFileChooser(): FileChooser
+}
+
+class AppGUI {
+    +stage: Stage
+    -menuBar: MenuBarController
+    -workspaceView: WorkspaceView
+    -listEditor: ListEditor
+    __Constructor__
+    +AppGUI()
+    __Methods__
+    ..JavaFX..
+    +launch()
+    +start(stage: Stage)
+    ..Getters/Setters..
+    +getMenuBar(): MenuBarController
+    +setMenuBar(mb: MenuBarController)
+    +setWorkspaceView(wv: WorkspaceView)
+    +setListEditor(le: ListEditor)
+    ..List Manipulation..
+    +newList(list: List, fromFile: boolean)
+    +clearList()
+    +deleteList()
+    +setListTitle(listIndex: int, newTitle: String)
+    ..Item Manipulation..
+    +newItem(item: Item)
+    +deleteItem(listIndex: int, itemIndex: int)
+    ..Interface..
+    +resetGUI()
+    +openBranchInTab(int branchIndex)
+    +toggleItemFilter(completedFilter: boolean)
+    +helpScreen()
+    +promptForTitle(newList: boolean)
+    ..File Managing..
+    +saveList()
+}
+
+class AppGUIController {
+    ..FXML..
+    -appBody: AnchorPane
+    --Initializer--
+    +initialize()
+}
+
 class List {
-    - title: String
-    - items: ArrayList<Item>
-    --Get/Set--
-    + title(): String
-    + title(String): void
-    --
-    + addItem(Item): void
-    + removeItem(index: int): void
-    + getItem(index: int): Item
-    + getItems(): ArrayList<Item>
-
-    + getCompletedItems(): ArrayList<Item>
-    + getIncompleteItems(): ArrayList<Item>
-
-    + getSaveData(): String
+    -title: String
+    -items: ArrayList<Item>
+    __Constructors__
+    +List() <<Default>>
+    +List(json: JSONObject) <<From JSON>>
+    __Methods__
+    ..Getters/Setters..
+    +getTitle(): String
+    +setTitle(newTitle: String)
+    +getItems(): ArrayList<Item>
+    +setItems(newItems: ArrayList<Item>)
+    ..Item Manipulation..
+    +add(newItem: Item)
+    +remove(itemIndex: int)
+    +get(itemIndex: int): Item
+    +clear()
+    +size(): int
+    ..File Saving..
+    +toString(): String
 }
 
-Item *-- DueDate
 class Item {
-    - description: String
-    - due: DueDate
-    - completed: Boolean
-    --Get/Set--
-    + description(): String
-    + description(String): void
-    + due(): DueDate
-    + completed(): Boolean
-    + completed(Boolean): void
-    --
-    + getSaveData(): String
+    -description: String
+    -due: DueDate
+    -completed: Boolean
+    __Constructors__
+    +Item() <<Default>>
+    +Item(json: JSONObject) <<From JSON>>
+    __Methods__
+    ..Getters/Setters..
+    +getDescription(): String
+    +setDescription(newDesc: String)
+    +getDue(): DueDate
+    +setDue(newDate: DueDate)
+    +getCompleted(): Boolean
+    +setCompleted(newState: Boolean)
+    ..File Saving..
+    +toString(): String
 }
 
 class DueDate {
-    - year: int
-    - month: int
-    - day: int
-    --Get/Set--
-    + year(): int
-    + year(int): void
-    + month(): int
-    + month(int): void
-    + day(): int
-    + day(int): void
+    -year: int
+    -month: int
+    -day: int
+    __Constructors__
+    +DueDate() <<Default>>
+    +DueDate(json: JSONObject): <<From JSON>>
+    +DueDate(date: LocalDate): <<From LocalDate>>
+    __Methods__
+    ..Getters/Setters..
+    +getYear(): int
+    +setYear(newYear: int)
+    +getMonth(): int
+    +setMonth(newMonth: int)
+    +getDay(): int
+    +setDay(newDay: int)
+    ..Auxiliary..
+    +toLocalDate(): LocalDate
 }
 
-FileHandler <-- List
-class FileHandler {
-    --Write--
-    +{static} writeList(List, filePath: String): void
-    +{static} writeLists(ArrayList<List>, filePath: String): void
-    --Read--
-    +{static} readList(filePath: String): List
+class ListEditor {
+    -pane: TabPane
+    -tabs: ArrayList<TabController>
+    __Constructor__
+    +ListEditor(node: TabPane)
+    __Methods__
+    ..Getters/Setters..
+    +getTabPane(): TabPane
+    ..TabPane Manipulation..
+    +newTab(list: List, listIndex: int, fromFile: boolean)
+    +removeList(listIndex: int)
+    +removeItem(listIndex: int, itemIndex: int)
+    +renameTab(listIndex: int, newTitle: String)
+    +openTab(listIndex: int)
+    ..Auxiliary..
+    +openUsageTab()
+    +getCurrentTab(): TabController
+    -getTab(listIndex: int): TabController
+    -getTabIndex(int listIndex): int
+    -removeTab(listIndex: int)
+    -updateMenuBar(ov: ObservableValue, oldTab: Tab, newTab: Tab)
+    -currentTabIndex(): int
 }
 
-class Util {
-    +{static} loadView(fxmlName: String): Scene
+class WorkspaceView {
+    -treeMap: ArrayList<branchMap>
+    ..FXML..
+    -tree: TreeView<String>
+    -root: TreeItem<String>
+    __Constructor__
+    +WorkspaceView(node: TreeView<String>)
+    __Methods__
+    ..TreeView Manipulation..
+    +addList(list: List, listIndex: int)
+    +addItem(listIndex: int, item: Item)
+    +removeList(int listIndex)
+    +removeItem(listIndex: int, itemIndex: int)
+    +clearList(listIndex: int)
+    +clear()
+    +renameList(listIndex: int, newTitle: String)
+    ..Auxiliary..
+    +getBranchIndex(listIndex: int): int
+    +getBranch(branchIndex: int): TreeItem<String>
+    -onMouseClicked(mouseEvent: MouseEvent)
+    +getListIndex(branchIndex: int): int
+}
+WorkspaceView +-- branchMap
+class branchMap {
+    +listIndex: int
+    +nodes: ArrayList<Integer>
+}
+
+class MenuBarController {
+
+}
+
+class TabController {
+
+}
+
+class ItemCardController {
+
+}
+
+class TitlePromptController {
+
 }
 
 @enduml

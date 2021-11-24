@@ -74,7 +74,7 @@ public void removeItem(int listIndex, int itemIndex) {
     // Abort if containing tab not open.
     if ( tab == null ) return;
     // Abort if item would not be in tab.
-    if ( tab.passesFilter(itemIndex) ) return;
+    if ( !tab.passesFilter(itemIndex) ) return;
     int cardIndex = tab.getCardIndex(itemIndex);
     // Abort if card not in tab.
     if ( cardIndex == -1 ) return;

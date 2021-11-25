@@ -153,7 +153,7 @@ public void renameList(int listIndex, String newTitle) {
 //  Pre-condition:  listIndex is a valid index to list with a branch
 //                  in the tree view.
 //  Post-condition: Returns the index of the list's branch in the tree view.
-public int getBranchIndex(int listIndex) {
+private int getBranchIndex(int listIndex) {
     // Search for the branch in the treeMap and return.
     for (int i = 0; i < this.treeMap.size(); i++) {
         branchMap b = this.treeMap.get(i);
@@ -165,7 +165,7 @@ public int getBranchIndex(int listIndex) {
 
 //  Pre-condition:  branchIndex is the index of a branch in the Tree View.
 //  Post-condition: Returns the branch from the tree at index branchIndex.
-public TreeItem<String> getBranch(int branchIndex) {
+private TreeItem<String> getBranch(int branchIndex) {
     if ( this.root.getChildren().size() > branchIndex ) return this.root.getChildren().get(branchIndex);
     return null;
 }
@@ -191,7 +191,7 @@ public int getListIndex(int branchIndex) { return this.treeMap.get(branchIndex).
 
 /* ---------- Helper Class ---------- */
 // this.treeMap item class.
-public static class branchMap {
+private static class branchMap {
     // The branch's corresponding list.
     public int listIndex;
     // Each index is the index of a node in the branch.

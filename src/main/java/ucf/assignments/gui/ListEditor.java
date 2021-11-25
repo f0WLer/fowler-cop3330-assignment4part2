@@ -30,9 +30,6 @@ public ListEditor(TabPane node) throws IOException {
     this.pane.getSelectionModel().selectedItemProperty().addListener(this::updateMenuBar);
 }
 
-/* ---------- Getters ---------- */
-public TabPane getTabPane() { return this.pane; }
-
 /* ---------- TabPane Manipulation ---------- */
 //  Pre-condition:  list is a new list at index listIndex in memory. fromFile is
 //                  whether the list is from a file.
@@ -113,8 +110,8 @@ public void openTab(int listIndex) throws IOException {
         this.newTab(App.mem.getList(listIndex), listIndex, true);
     else {
         // If the list is open, select its corresponding tab.
-        int tabIndex = this.getTabPane().getTabs().indexOf(tab.getRoot());
-        this.getTabPane().getSelectionModel().select(tabIndex);
+        int tabIndex = this.pane.getTabs().indexOf(tab.getRoot());
+        this.pane.getSelectionModel().select(tabIndex);
     }
 }
 

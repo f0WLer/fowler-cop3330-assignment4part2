@@ -13,7 +13,10 @@ import java.time.LocalDate;
 
 
 public class ItemCardController {
-/* ---------- FXML Fields ---------- */
+/* ---------- Fields ---------- */
+private TabController tab;
+private Boolean completed;
+//  FXML
 @FXML
 private Pane root;
 @FXML
@@ -24,12 +27,6 @@ private Pane delPane;
 private TextArea description;
 @FXML
 private DatePicker due;
-
-/* ---------- Fields ---------- */
-private TabController tab;
-private Boolean completed;
-// itemIndex property getter.
-private int itemIndex() { return (int)this.root.getProperties().get("itemIndex"); }
 
 /* ---------- Initializer ---------- */
 //  Pre-condition:  tab is the controller of the tab that this card belongs to.
@@ -54,7 +51,6 @@ public void init(TabController tab, int itemIndex) {
     due.valueProperty().addListener(this::changeDue);
 }
 
-
 /* ---------- Item Data Manipulation ---------- */
 @FXML
 private void pressCheckButton() {
@@ -70,13 +66,12 @@ private void pressCheckButton() {
     // Otherwise, update the button's appearance.
     this.updateCheckButton();
 }
-
 @FXML
 private void pressDelButton() { App.gui.deleteItem(this.tab.listIndex, this.itemIndex()); }
 @FXML
-private void changeDescription(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+private void changeDescription(ObservableValue<? extends Boolean> ov, Boolean oldVal, Boolean newVal) {
     // If newPropertyValue is false, the getDescription has left focus, so update changes made.
-    if ( !newPropertyValue ) {
+    if ( !newVal ) {
         // Trim whitespace and cut off text at 256 characters.
         String text = description.getText().trim();
         text = text.substring(0, Math.min(text.length(), 256));
@@ -86,13 +81,14 @@ private void changeDescription(ObservableValue<? extends Boolean> arg0, Boolean 
     }
 }
 @FXML
-private void changeDue(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+private void changeDue(ObservableValue<? extends LocalDate> ov, LocalDate oldVal, LocalDate newVal) {
     // If new date is null, remove the current due date. If new date is a valid date, set the due date to that date.
-    if ( newValue == null )
+    if ( newVal == null )
         App.mem.getList(this.tab.listIndex).getItems().get(this.itemIndex()).setDue(null);
     else
-        App.mem.getList(this.tab.listIndex).getItems().get(this.itemIndex()).setDue(new DueDate(newValue));
+        App.mem.getList(this.tab.listIndex).getItems().get(this.itemIndex()).setDue(new DueDate(newVal));
 }
+private int itemIndex() { return (int)this.root.getProperties().get("itemIndex"); }
 
 /* ---------- Auxiliary ---------- */
 private void updateCheckButton() {

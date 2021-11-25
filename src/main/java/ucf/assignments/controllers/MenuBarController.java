@@ -14,11 +14,12 @@ import java.util.ArrayList;
 
 public class MenuBarController {
 
-@FXML
-public CheckMenuItem incompleteCheck;
+/* ---------- FXML Fields ---------- */
+
 @FXML
 public CheckMenuItem completedCheck;
-/* ---------- FXML Fields ---------- */
+@FXML
+public CheckMenuItem incompleteCheck;
 @FXML
 private MenuItem saveList;
 @FXML
@@ -30,12 +31,13 @@ private MenuItem newItem;
 @FXML
 private MenuItem clearItems;
 
-/* ---------- Fields ---------- */
 /* ---------- Initializer ---------- */
+
 // Disable any menu items that can't be used without a list in the List Editor.
 public void initialize() { this.toggleListItems(false); }
 
 /* ---------- Auxiliary ---------- */
+
 // Toggles all menu items that can't be used without a list in the List Editor.
 public void toggleListItems(boolean state) {
     this.saveList.setDisable(!state);

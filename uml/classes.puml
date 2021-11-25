@@ -142,8 +142,6 @@ class ListEditor {
     __Constructor__
     +ListEditor(node: TabPane)
     __Methods__
-    ..Getters/Setters..
-    +getTabPane(): TabPane
     ..TabPane Manipulation..
     +newTab(list: List, listIndex: int, fromFile: boolean)
     +removeList(listIndex: int)
@@ -177,8 +175,8 @@ class WorkspaceView {
     +clear()
     +renameList(listIndex: int, newTitle: String)
     ..Auxiliary..
-    +getBranchIndex(listIndex: int): int
-    +getBranch(branchIndex: int): TreeItem<String>
+    -getBranchIndex(listIndex: int): int
+    -getBranch(branchIndex: int): TreeItem<String>
     -onMouseClicked(mouseEvent: MouseEvent)
     +getListIndex(branchIndex: int): int
 }
@@ -189,19 +187,92 @@ class branchMap {
 }
 
 class MenuBarController {
-
+    ..FXML..
+    +incompleteCheck: CheckMenuItem
+    +completedCheck: CheckMenuItem
+    -saveList: MenuItem
+    -deleteList: MenuItem
+    -changeTitle: MenuItem
+    -newItem: MenuItem
+    -clearItems: MenuItem
+    __Methods__
+    ..Initializer..
+    +initialize()
+    ..Auxiliary..
+    +toggleListItems(state: boolean)
+    ..FXML..
+    -file_new()
+    -file_open()
+    -file_saveAs()
+    -list_new()
+    -list_newItem()
+    -list_changeTitle()
+    -list_clearItems()
+    -list_showCompleted()
+    -list_showIncomplete()
+    -list_save()
+    -list_delete()
+    -help_usage()
 }
 
 class TabController {
-
+    +allowCompleted: boolean
+    +allowIncomplete: boolean
+    +listIndex: int
+    ..FXML..
+    -body: VBox
+    -root: Tab
+    __Methods__
+    ..Initializer..
+    +init(list: List, listIndex: int)
+    ..Getters..
+    +getBody(): VBox
+    +getRoot(): Tab
+    ..Item Card Manipulation..
+    +add(itemIndex: int)
+    +clear()
+    ..Auxiliary..
+    +passesFilter(itemIndex: int): boolean
+    +getCardIndex(itemIndex: int): int
 }
 
 class ItemCardController {
-
+    -tab: TabController
+    -completed: Boolean
+    ..FXML..
+    -root: Pane
+    -checkPane: Pane
+    -delPane: Pane
+    -description: TextArea
+    -due: DatePicker
+    __Methods__
+    ..Initializer..
+    +init(tab: TabController, itemIndex: int)
+    ..Item Data Manipulation..
+    -pressCheckButton()
+    -pressDelButton()
+    -changeDescription(ov: Boolean, oldVal: Boolean, newVal: Boolean)
+    -changeDue(ov: LocalDate, oldVal: LocalDate, newVal: LocalDate)
+    -itemIndex(): int
+    ..Auxiliary..
+    -updateCheckButton()
+    -highlightCheckButton()
+    -unhighlightCheckButton()
+    -highlightDelButton()
+    -unhighlightDelButton()
 }
 
 class TitlePromptController {
-
+    -listIndex: int
+    -stage: Stage
+    ..FXML..
+    -titleField: TextField
+    -label: Label
+    __Methods__
+    ..Initializer..
+    +init(listIndex: int, stage: Stage, newList: boolean)
+    ..FXML..
+    -confirm()
 }
 
 @enduml

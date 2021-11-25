@@ -7,15 +7,15 @@ import javafx.stage.Stage;
 import ucf.assignments.App;
 
 public class TitlePromptController {
-/* ---------- FXML Fields ---------- */
-@FXML
-private TextField titleField;
-@FXML
-private Label label;
 
 /* ---------- Fields ---------- */
 private int listIndex;
 private Stage stage;
+//  FXML
+@FXML
+private TextField titleField;
+@FXML
+private Label label;
 
 /* ---------- Initializer ---------- */
 // Sets its fields and the appropriate getTitle.
@@ -24,6 +24,7 @@ public void init(int listIndex, Stage stage, boolean newList) {
 	this.stage = stage;
 	if ( !newList ) this.label.setText("Rename " + App.mem.getList(listIndex).getTitle() + "...");
 }
+
 
 @FXML
 private void confirm() {
